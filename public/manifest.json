@@ -4,7 +4,7 @@
   "manifest_version": 2,
   "description": "Simple extension to manage all of your bookmarks",
   "author": "TIKAM CHAND",
-  "homepage_url": "http://www.tcmhack.in/",
+  "homepage_url": "http://tcmhack.in/projects/bookmarks-management/",
   "icons": {
     "128": "icon.png",
     "16": "icon.png",

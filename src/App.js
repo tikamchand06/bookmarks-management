@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Segment, Icon, Image, Tab, Popup, Header } from 'semantic-ui-react';
 import Bookmarks from './Bookmarks';
+import BookmarkSearch from './BookmarkSearch';
 import logo from './logo.png';
 
 const App = () => {
@@ -48,6 +49,7 @@ const App = () => {
     <Container fluid className="m-0">
       <Segment className="mb-2px flex-item">
         <Image src={logo} size="small" />
+        <BookmarkSearch />
         <div className="main-menu">
           <Popup content="Home" trigger={<Icon name="home" onClick={() => setRecentPage(false)} link />} inverted basic />
           <Popup content="Add New" trigger={<Icon name="add circle" onClick={() => setOpenForm(true)} link />} inverted basic />

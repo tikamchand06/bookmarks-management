@@ -2,7 +2,7 @@
 
 body {
   margin: 0;
-  min-width: 420px;
+  min-width: 452px;
   font-family: 'Open Sans', sans-serif !important;
 }
 body *:not(i) {
@@ -67,4 +67,8 @@ body *:not(i) {
 }
 .ui.styled.accordion .content {
   padding: 0 0.5rem 0.5rem !important;
+}
+.ui.search input {
+  width: 152px !important;
+  padding: 0.5rem 1rem;
 }
