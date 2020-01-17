@@ -52,7 +52,9 @@ const App = () => {
         <BookmarkSearch />
         <div className="main-menu">
           <Popup content="Home" trigger={<Icon name="home" onClick={() => setRecentPage(false)} link />} inverted basic />
-          <Popup content="Add New" trigger={<Icon name="add circle" onClick={() => setOpenForm(true)} link />} inverted basic />
+          {!isRecentPage && (
+            <Popup content="Add New" trigger={<Icon name="add circle" onClick={() => setOpenForm(true)} link />} inverted basic />
+          )}
           <Popup content="Recent History" trigger={<Icon name="history" onClick={() => setRecentPage(true)} link />} inverted basic />
           <Popup
             content="Help - Contact Me"
