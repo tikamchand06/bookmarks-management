@@ -59,7 +59,7 @@ const App = () => {
           <Popup
             content="Help - Contact Me"
             trigger={
-              <a href="http://www.tcmhack.in/contect-us" target="_blank">
+              <a href="http://www.tcmhack.in/contact-us" target="_blank">
                 <Icon name="help circle" />
               </a>
             }
