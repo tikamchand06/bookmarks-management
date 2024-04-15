@@ -1,105 +1,71 @@
-import React, { useEffect, useState } from 'react';
-import { Container, Segment, Icon, Image, Tab, Popup, Header } from 'semantic-ui-react';
-import Bookmarks from './Bookmarks';
-import BookmarkSearch from './BookmarkSearch';
-import logo from './logo.png';
+import logo from "./logo.png";
+import All from "./components/All";
+import Add from "./components/Add";
+import Icon from "./components/Icon";
+import Recent from "./components/Recent";
+import Search from "./components/Search";
+import React, { useState, useEffect } from "react";
+import { Layout, Image, Tabs, Typography, Button } from "antd";
 
-const App = () => {
-  const MAX_RECENT_ITEM = 25;
-  const [isRecentPage, setRecentPage] = useState(false);
-  const [recentBookmarks, setRecentBookmarks] = useState(null);
-  const [openForm, setOpenForm] = useState(false);
-  const [bookmarks, setBookmarks] = useState(null);
+const { Link } = Typography;
+const { bookmarks } = window.chrome;
+const { Header, Content, Footer } = Layout;
 
-  const init = () => {
-    window.chrome.bookmarks.getTree(tree => setBookmarks(tree[0].children));
-    window.chrome.bookmarks.getRecent(MAX_RECENT_ITEM, items => setRecentBookmarks(items));
-  };
+export default function App() {
+  const [tree, setTree] = useState([]);
+
+  const updateTree = () => bookmarks.getTree((tree) => setTree(tree[0]?.children || []));
+
+  const itmes = [
+    { key: "all", label: "All", icon: <Icon name='bookmarks' />, children: <All tree={tree} updateTree={updateTree} /> },
+    { key: "recent", label: "Recent", icon: <Icon name='arrow-clockwise' />, children: <Recent /> },
+  ];
 
   useEffect(() => {
-    init();
+    updateTree();
   }, []);
 
-  let panes = [];
-  let parentFolders = [];
-  if (bookmarks && !isRecentPage) {
-    // Parent Folders
-    parentFolders = bookmarks.map(bookmark => {
-      return { text: bookmark.title, value: bookmark.id, key: bookmark.id, isMain: true };
-    });
-
-    // Bookmarks
-    panes = bookmarks.map(bookmark => {
-      return {
-        menuItem: bookmark.title,
-        render: () => (
-          <Bookmarks
-            bookmarks={bookmark.children}
-            forceUpdate={init}
-            parents={parentFolders}
-            openForm={openForm}
-            onClose={() => setOpenForm(false)}
-          />
-        )
-      };
-    });
-  }
-
   return (
-    <Container fluid className="m-0">
-      <Segment className="mb-2px flex-item">
-        <Image src={logo} size="small" />
-        <BookmarkSearch />
-        <div className="main-menu">
-          <Popup content="Home" trigger={<Icon name="home" onClick={() => setRecentPage(false)} link />} inverted basic />
-          {!isRecentPage && (
-            <Popup content="Add New" trigger={<Icon name="add circle" onClick={() => setOpenForm(true)} link />} inverted basic />
-          )}
-          <Popup content="Recent History" trigger={<Icon name="history" onClick={() => setRecentPage(true)} link />} inverted basic />
-          <Popup
-            content="Help - Contact Me"
-            trigger={
-              <a href="http://www.tcmhack.in/contact-us" target="_blank">
-                <Icon name="help circle" />
-              </a>
-            }
-            inverted
-            basic
-          />
-          <Popup content="Close Window" trigger={<Icon name="shutdown" onClick={() => window.close()} link />} inverted basic />
-        </div>
-      </Segment>
+    <Layout>
+      <Header className='p-10px bg-white h-auto lh-auto flex-item space-between'>
+        <Image src={logo} preview={false} className='h-42px' />
+        <Button type='primary' target='_blank' href='https://admin.tcmhack.in'>
+          Contact Me
+        </Button>
+      </Header>
 
-      {!isRecentPage && (
-        <Segment
-          basic
-          className="body pt-0"
-          loading={!bookmarks}
-          content={<Tab menu={{ secondary: true, pointing: true }} panes={panes} />}
+      <Content className='bg-white' style={{ height: "calc(100vh - 104px)" }}>
+        <Tabs
+          items={itmes}
+          animated={true}
+          defaultActiveKey='all'
+          tabBarStyle={{
+            top: 0,
+            margin: 0,
+            zIndex: 11,
+            padding: "0 10px",
+            background: "#fff",
+            position: "sticky",
+            boxShadow: "rgba(0, 0, 0, 0.16) 0px 1px 4px",
+          }}
+          tabBarExtraContent={{
+            right: (
+              <div className='flex-item gap-1'>
+                <Add tree={tree} updateTree={updateTree} />
+                <Search />
+              </div>
+            ),
+          }}
         />
-      )}
+      </Content>
 
-      {isRecentPage && (
-        <Segment className="body" basic loading={!recentBookmarks}>
-          <Header as="h3" content="Recent Bookmarks" color="blue" />
-          {recentBookmarks && <Bookmarks bookmarks={recentBookmarks} forceUpdate={init} parents={parentFolders} />}
-        </Segment>
-      )}
-
-      <Segment className="mt-2px footer flex-item">
-        <span>
-          <Icon name="copyright outline" />
-          {new Date().getFullYear()}{' '}
-          <a href="http://www.tcmhack.in" className="text-white" target="_blank" rel="noopener noreferrer">
-            TCMHACK
-          </a>
-        </span>
-        <span>
-          Made with <Icon name="heart" color="pink" /> at Jaipur
-        </span>
-      </Segment>
-    </Container>
+      <Footer className='p-10px bg-212121 color-ffffff flex-item gap-5px'>
+        <Icon name='c-circle' height={14} width={14} />
+        {new Date().getFullYear()} Developed by
+        <Link href='https://www.tcmhack.in' target='_blank'>
+          https://www.tcmhack.in
+        </Link>
+      </Footer>
+    </Layout>
   );
-};
-
-export default App;
+}
